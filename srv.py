@@ -9,9 +9,9 @@ db = mysql.connect(
 	passwd = "PASSWORD",
 	database = "myblog")
 
-#######################################################################################
+########################################################################################
 # How to use this REST API:
-#######################################################################################
+########################################################################################
 # to get all users u can send GET reques to /users/
 # to get users by any attribute send GET request to /users/<attribute>/<value>
 # and replace "<attribute>" and "<value>" with your required attribute and value.
@@ -22,7 +22,7 @@ db = mysql.connect(
 #
 # to add user, send POST request with the required attributes and values to /users/,
 # for exmaple:
-# send POST request to "/users/" 
+# send POST request to "/users/"
 # with this body:
 # {
 # 	"full_name": "Demo User",
@@ -34,9 +34,9 @@ db = mysql.connect(
 #
 # to add post, send POST request with the required attributes and values to /posts/,
 # for exmaple:
-# send POST request to "/users/" 
+# send POST request to "/users/"
 # with this body:
-# { 
+# {
 # 	"title": "Title text",
 #	"summary": "This is the summary..",
 #	"content": "content text..",
@@ -70,12 +70,12 @@ def posts(attribute=None, value=None):
 	else:
 		data = request.get_json()
 		return addPost(data)
-		
+
 @app.route('/<path:path>')
 def catch_all(path):
     return 'Invalid argument! %s' % path, 404
-	
-	
+
+
 
 #######################################
 # Functions:
@@ -93,16 +93,16 @@ def addUser(data):
 def getUsers(attribute, value):
 	query = "select * from users"
 	header = ['id', 'full_name', 'username', 'password', 'type']
-	return selectValidation(attribute, header, value, query, "users")	
+	return selectValidation(attribute, header, value, query, "users")
 
 def getPosts(attribute, value):
 	query = "select * from posts"
 	header = ['id', 'title', 'summary', 'content', 'image', 'auther_id', 'creation_date', 'last_update_date', 'publish_date', 'num_of_views', 'tags_list']
 	return selectValidation(attribute, header, value, query, "posts")
-	
-	
 
-def selectValidation(attribute, header, value, query, table):	
+
+
+def selectValidation(attribute, header, value, query, table):
 	if (attribute is not None) and (value is not None):
 		if(attribute in header):
 			query = "select * from "+table+" where "+attribute+"='"+value+"'"
@@ -121,7 +121,7 @@ def postQuery(query, values):
 	new_post_id = cursor.lastrowid
 	cursor.close()
 	return "Added: "+str(new_post_id)
-	
+
 def getQuery(query, header):
 	cursor = db.cursor()
 	cursor.execute(query)
@@ -132,10 +132,10 @@ def getQuery(query, header):
 		tmp = []
 		for c in r:
 				tmp.append(c.__str__()) #because of the datetime Object(Json Unsupport)
-			
+
 		data.append(dict(zip(header, tmp)))
 	return data
- 
-	
+
+
 if __name__ == "__main__":
 	app.run()
